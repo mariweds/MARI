@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generador de CURP</title>
+  <style>
+    .error {
+      box-shadow: 0 0 15px red,inset 0 0 10px red;
+    
+      border: 2px solid red;
+    }
+
+    .success {
+      border: 2px solid green;
+    }
+  body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    form {
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    button[type="submit"] {
+      padding: 10px 15px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    
+  </style>
+</head>
+<body>
+  <h1>Generador de CURP</h1>
+  <form id="formulario">
+    <div>
+      <label for="nombre">Nombre(s):</label>
+      <input type="text" id="nombre" required>
+    </div>
+    <div>
+      <label for="apellidoPaterno">Apellido paterno:</label>
+      <input type="text" id="apellidoPaterno" required>
+    </div>
+    <div>
+      <label for="apellidoMaterno">Apellido materno:</label>
+      <input type="text" id="apellidoMaterno" required>
+    </div>
+    <div>
+      <label for="fechaNacimiento">Fecha de nacimiento:</label>
+      <input type="date" id="fechaNacimiento" required>
+    </div>
+    <div>
+      <label for="genero">Género:</label>
+      <select id="genero" required>
+        <option value="">Seleccione una opción</option>
+        <option value="H">Hombre</option>
+        <option value="M">Mujer</option>
+      </select>
+    </div>
+    <div>
+      <button type="submit">Generar CURP</button>
+    </div>
+  </form>
+
+  <div id="resultado"></div>
+  <script>
+    const formulario = document.getElementById('formulario');
+    const resultado = document.getElementById('resultado');
+
+    formulario.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nombre = document.getElementById('nombre').value;
+      const apellidoPaterno = document.getElementById('apellidoPaterno').value;
+      const apellidoMaterno = document.getElementById('apellidoMaterno').value;
+      const fechaNacimiento = document.getElementById('fechaNacimiento').value;
+      const genero = document.getElementById('genero').value;
+
+      const curp = generarCurp(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, genero);
+
+      resultado.innerHTML = 'CURP: ' + curp;
+    });
+
+    const nombreInput = document.getElementById('nombre');
+    const apellidoPaternoInput = document.getElementById('apellidoPaterno');
+    const apellidoMaternoInput = document.getElementById('apellidoMaterno');
+
+    nombreInput.addEventListener('focus', function() {
+      removeValidityClass(nombreInput);
+    });
+
+    apellidoPaternoInput.addEventListener('focus', function() {
+      removeValidityClass(apellidoPaternoInput);
+    });
+
+    apellidoMaternoInput.addEventListener('focus', function() {
+      removeValidityClass(apellidoMaternoInput);
+    });
+
+    nombreInput.addEventListener('blur', function() {
+      validarCampoTexto(nombreInput);
+    });
+
+    apellidoPaternoInput.addEventListener('blur', function() {
+      validarCampoTexto(apellidoPaternoInput);
+    });
+
+    apellidoMaternoInput.addEventListener('blur', function() {
+      validarCampoTexto(apellidoMaternoInput);
+    });
+
+    function removeValidityClass(input) {
+      input.classList.remove('error');
+      input.classList.remove('success');
+    }
+
+    function validarCampoTexto(input) {
+      const val = input.value.trim();
+      if (!/^[A-Z][a-zA-ZÁÉÍÓÚáéíóúÜüñÑ\s]*$/.test(val)) {
+        input.classList.add('error');
+      } else {
+        input.classList.remove('error');
+        input.classList.add('success');
+      }
+    }
+
+    function generarCurp(nombre, apellidoPaterno, apellidoMaterno, fechaNacimiento, genero) {
+      const curp = apellidoPaterno.substr(0, 2) + apellidoMaterno.substr(0, 1) + nombre.substr(0, 1) + fechaNacimiento.replace(/-/g, '').
+      substr(2, 6) + genero;
+      return curp.toUpperCase();
+    }
+  </script>
+</body>
+</html>
+
+
